@@ -12,7 +12,7 @@ import { run } from "./runner.js";
 export type DispatcherOptions = {
 	/** Resolve and print the script key without executing anything. */
 	dryRun?: boolean;
-	/** Print platform, arch, resolved key, and runner details to stderr. */
+	/** Print platform, arch, resolved key and runner details to stderr. */
 	verbose?: boolean;
 	/**
 	 * Exit 0 silently when no matching script is found instead of erroring.
@@ -68,7 +68,7 @@ const readScripts = (pkgPath: string): Record<string, string> => {
 
 /**
  * Main entry point. Resolves the correct platform/arch script and runs it.
- * All errors are caught, printed to stderr, and result in exit code 1.
+ * All errors are caught, printed to stderr and result in exit code 1.
  */
 export const dispatch = (options: DispatcherOptions = {}): void => {
 	try {

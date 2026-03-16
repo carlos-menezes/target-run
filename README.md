@@ -62,7 +62,7 @@ $ pnpm build --verbose
 | Flag | Description |
 |---|---|
 | `--dry-run` | Print the resolved key without executing |
-| `--verbose` | Print platform, arch, resolved key, and runner |
+| `--verbose` | Print platform, arch, resolved key and runner |
 | `--optional` | Exit 0 silently when no match is found |
 | `--required` | Exit 1 when no match is found |
 | `--script <name>` | Override the base script name |

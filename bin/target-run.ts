@@ -16,7 +16,7 @@ Options:
   --help, -h        Print this help message
   --version, -v     Print the package version
   --dry-run         Resolve and print the target script key without executing
-  --verbose         Print platform, arch, resolved key, and runner details
+  --verbose         Print platform, arch, resolved key and runner details
   --optional        Exit 0 silently when no matching script is found instead of
                     erroring — useful for hooks that only apply to some platforms
   --required        Exit 1 when no matching script is found, even for lifecycle hooks
