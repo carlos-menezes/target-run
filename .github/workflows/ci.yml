@@ -7,6 +7,28 @@ on:
   pull_request:
 
 jobs:
+  changeset:
+    name: Changeset present
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for changeset
+        run: pnpm changeset status --since=origin/main
+
   ci:
     name: Check, build & test
     runs-on: ubuntu-latest
