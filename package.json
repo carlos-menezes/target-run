@@ -1,0 +1,48 @@
+{
+	"name": "target-run",
+	"version": "0.0.0",
+	"description": "OS & architecture-aware script dispatcher",
+	"type": "module",
+	"author": "Carlos Menezes",
+	"license": "MIT",
+	"packageManager": "pnpm@10.32.1",
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"bin": {
+		"target-run": "dist/bin/target-run.js"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/src/index.js",
+			"types": "./dist/src/index.d.ts"
+		}
+	},
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"build": "tsc",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "biome lint .",
+		"format": "biome format .",
+		"check": "biome check .",
+		"changeset": "changeset",
+		"version": "changeset version",
+		"release": "pnpm build && pnpm publish --access public",
+		"prepublishOnly": "pnpm test",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.7",
+		"@changesets/cli": "^2.30.0",
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
+		"@types/node": "^22.0.0",
+		"husky": "^9.1.7",
+		"tsx": "^4.19.3",
+		"typescript": "^5.9.3",
+		"vitest": "^3.1.1"
+	}
+}
