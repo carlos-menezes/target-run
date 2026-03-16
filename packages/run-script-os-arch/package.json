@@ -1,0 +1,27 @@
+{
+  "name": "run-script-os-arch",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "author": "Carlos Menezes",
+  "license": "MIT",
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "test": "node bin/run-script-os-arch.js",
+    "test:darwin:arm64": "echo Running on macOS ARM64",
+    "test:linux:x64": "echo Running on Linux x64",
+    "test:win32:x64": "echo Running on Windows x64",
+    "test:default": "echo Running default fallback",
+    "build": "node bin/run-script-os-arch.js",
+    "build:linux:x64": "echo Building for Linux x64",
+    "build:darwin:arm64": "echo Building for macOS ARM64",
+    "_debug": "RSOA_DEBUG=1 node bin/run-script-os-arch.js"
+  },
+  "bin": {
+    "run-script-os-arch": "./bin/run-script-os-arch.js"
+  }
+}
