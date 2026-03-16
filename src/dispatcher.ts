@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveScript } from "./resolve-script.js";
+import { type Detector, defaultDetector } from "./detector.js";
 import {
 	LifecycleEventError,
 	PackageJsonError,
 	ScriptNotFoundError,
 } from "./errors.js";
-import { defaultDetector, type Detector } from "./detect.js";
+import { resolveScript } from "./resolver.js";
 import { run } from "./runner.js";
 
 export type DispatcherOptions = {
@@ -14,11 +14,15 @@ export type DispatcherOptions = {
 	dryRun?: boolean;
 	/** Print platform, arch, resolved key, and runner details to stderr. */
 	verbose?: boolean;
-	/** Exit 0 silently when no matching script is found instead of exiting 1. */
+	/**
+	 * Exit 0 silently when no matching script is found instead of erroring.
+	 * Useful for hooks that only apply to some platforms.
+	 */
 	optional?: boolean;
 	/**
-	 * Exit 1 when no matching script is found, even for lifecycle hooks whose
-	 * base value is "target-run" (overrides the level-5 silent skip).
+	 * Exit 1 when no matching script is found, even for lifecycle hooks (e.g.
+	 * `preinstall`) whose missing platform variant would normally be skipped
+	 * silently. Use this to enforce that every target platform has a variant.
 	 */
 	required?: boolean;
 	/** Working directory used to locate package.json. Defaults to process.cwd(). */

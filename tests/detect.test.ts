@@ -1,6 +1,6 @@
 import os from "node:os";
 import { describe, expect, it } from "vitest";
-import { createDetector, defaultDetector } from "../src/detect.js";
+import { createDetector, defaultDetector } from "../src/detector.js";
 
 describe("createDetector", () => {
 	it("returns platform and arch from the provided os module", () => {

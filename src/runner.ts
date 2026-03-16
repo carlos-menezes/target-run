@@ -38,19 +38,21 @@ export const run = (options: RunnerOptions): number => {
 		throw new CircularDispatchError(scriptKey, command);
 	}
 
-	const pm = detectPackageManager();
+	const packageManager = detectPackageManager();
 
 	if (verbose) {
-		console.error(`[target-run] Package manager : ${pm}`);
-		console.error(`[target-run] Running         : ${pm} run ${scriptKey}`);
+		console.error(`[target-run] Package manager : ${packageManager}`);
+		console.error(
+			`[target-run] Running         : ${packageManager} run ${scriptKey}`,
+		);
 	}
 
 	if (dryRun) {
-		console.log(`[target-run] Would run: ${pm} run ${scriptKey}`);
+		console.log(`[target-run] Would run: ${packageManager} run ${scriptKey}`);
 		return 0;
 	}
 
-	const result = spawnSync(pm, ["run", scriptKey], {
+	const result = spawnSync(packageManager, ["run", scriptKey], {
 		stdio: "inherit",
 		shell: false,
 	});
