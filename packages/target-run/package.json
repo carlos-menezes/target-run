@@ -1,0 +1,36 @@
+{
+	"name": "target-run",
+	"version": "1.0.0",
+	"description": "OS & architecture-aware npm script dispatcher",
+	"type": "module",
+	"author": "Carlos Menezes",
+	"license": "MIT",
+	"packageManager": "pnpm@10.32.1",
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"bin": {
+		"target-run": "dist/bin/target-run.js"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/src/index.js",
+			"types": "./dist/src/index.d.ts"
+		}
+	},
+	"files": [
+		"dist/"
+	],
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsx bin/target-run.ts",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"typescript": "^5.9.3",
+		"tsx": "^4.19.3",
+		"vitest": "^3.1.1"
+	}
+}

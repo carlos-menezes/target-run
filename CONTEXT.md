@@ -1,10 +1,10 @@
-# run-script-os-arch
+# target-run
 
 **OS & Architecture-Aware npm Script Dispatcher**
 
 | | |
 |---|---|
-| **Package** | `run-script-os-arch` |
+| **Package** | `target-run` |
 | **Category** | CLI Utility / Build Tooling |
 | **Runtime** | Node.js >= 16.0.0 |
 | **Version** | 1.0.0 |
@@ -32,7 +32,7 @@
 
 ## 1. Executive Summary
 
-`run-script-os-arch` is a lightweight Node.js CLI tool designed to solve a fundamental problem in cross-platform development: running different npm scripts depending on the operating system and CPU architecture of the host machine.
+`target-run` is a lightweight Node.js CLI tool designed to solve a fundamental problem in cross-platform development: running different npm scripts depending on the operating system and CPU architecture of the host machine.
 
 When a developer runs `npm test` (or any configured script), the tool detects the current platform (e.g. `win32`, `darwin`, `linux`) and architecture (e.g. `x64`, `arm64`) at runtime, then dispatches to the matching sub-script defined in `package.json`. This eliminates ad-hoc shell conditionals, platform-specific CI hacks, and the overhead of maintaining separate configuration files per environment.
 
@@ -81,7 +81,7 @@ All platform-specific scripts follow this pattern in `package.json`:
 
 Where:
 
-- **`<base-script>`** is the name of the npm script that invokes `run-script-os-arch` (e.g. `test`, `build`, `start`).
+- **`<base-script>`** is the name of the npm script that invokes `target-run` (e.g. `test`, `build`, `start`).
 - **`<platform>`** is the value of `os.platform()` — one of: `win32`, `darwin`, `linux`, `freebsd`, `openbsd`, `sunos`, `aix`.
 - **`<arch>`** is the value of `os.arch()` — one of: `x64`, `arm64`, `ia32`, `arm`, `mips`, `mipsel`, `ppc64`, `s390x`.
 
@@ -90,7 +90,7 @@ Where:
 ```json
 {
   "scripts": {
-    "test": "run-script-os-arch",
+    "test": "target-run",
     "test:win32:x64":    "cross-env-shell TEST_ENV=win32-x64 jest --config=jest.e2e.config.ts",
     "test:darwin:arm64": "cross-env-shell TEST_ENV=darwin-arm64 jest --config=jest.e2e.config.ts",
     "test:linux:x64":    "cross-env-shell TEST_ENV=linux-x64 jest --config=jest.e2e.config.ts"
@@ -115,23 +115,23 @@ If an exact match is not found, the dispatcher uses the following resolution cha
 | 2 — OS only | `<script>:<platform>` | `test:linux` | Run it |
 | 3 — arch only | `<script>:<arch>` | `test:x64` | Run it |
 | 4 — default | `<script>:default` | `test:default` | Run it |
-| 5 — self | `<script>` value is `run-script-os-arch` | `pretest` | Skip silently, exit 0 |
+| 5 — self | `<script>` value is `target-run` | `pretest` | Skip silently, exit 0 |
 | 6 — error | No match at any level | — | Exit code 1 (or exit 0 with `--optional`) |
 
-Level 5 exists specifically for lifecycle hooks (`pretest`, `posttest`, etc.) — if a pre/post script is defined as `run-script-os-arch` but no platform variant exists for the current environment, the tool exits cleanly rather than erroring or looping. Level 6 can be suppressed with the `--optional` flag for cases where a missing platform script should be a no-op rather than a failure.
+Level 5 exists specifically for lifecycle hooks (`pretest`, `posttest`, etc.) — if a pre/post script is defined as `target-run` but no platform variant exists for the current environment, the tool exits cleanly rather than erroring or looping. Level 6 can be suppressed with the `--optional` flag for cases where a missing platform script should be a no-op rather than a failure.
 
 This ensures backward compatibility and progressive specificity.
 
 ### 3.4 Lifecycle Hook Support
 
-`npm_lifecycle_event` is set correctly for pre/post hooks by all package managers, so dispatching works automatically across the full lifecycle. Define `run-script-os-arch` as the handler for each hook, then add only the platform variants you need:
+`npm_lifecycle_event` is set correctly for pre/post hooks by all package managers, so dispatching works automatically across the full lifecycle. Define `target-run` as the handler for each hook, then add only the platform variants you need:
 
 ```json
 {
   "scripts": {
-    "pretest":  "run-script-os-arch",
-    "test":     "run-script-os-arch",
-    "posttest": "run-script-os-arch",
+    "pretest":  "target-run",
+    "test":     "target-run",
+    "posttest": "target-run",
 
     "pretest:linux:x64":     "...",
     "pretest:darwin:arm64":  "...",
@@ -154,9 +154,9 @@ Pre/post hooks do not need a platform variant on every target — the level 5 fa
 ### 4.1 Package Structure
 
 ```
-run-script-os-arch/
+target-run/
   bin/
-    run-script-os-arch.js    ← CLI entry point (#!/usr/bin/env node)
+    target-run.js    ← CLI entry point (#!/usr/bin/env node)
   src/
     index.js                 ← Core dispatch logic
     resolver.js              ← Script name resolution & fallback
@@ -173,7 +173,7 @@ run-script-os-arch/
 
 ### 4.2 Core Modules
 
-#### `bin/run-script-os-arch.js`
+#### `bin/target-run.js`
 
 The shebang entry point. Minimal: reads CLI flags (`--dry-run`, `--verbose`, `--help`) and delegates to `src/index.js`. Handles top-level unhandled rejections and exits with the appropriate code.
 
@@ -211,7 +211,7 @@ Responsible for finding the correct script key in the scripts map. Algorithm:
 1. Accept the base script name, platform, arch, the full scripts object, and an `optional` flag.
 2. Iterate through the resolution order defined in Section 3.3 (levels 1–4).
 3. Return the first matched `{ key, command }` pair.
-4. If no match is found, check level 5: if the base script's own value is `run-script-os-arch`, return `{ key: null, command: null, skipped: true }` to signal a silent no-op.
+4. If no match is found, check level 5: if the base script's own value is `target-run`, return `{ key: null, command: null, skipped: true }` to signal a silent no-op.
 5. Otherwise throw `ScriptNotFoundError`, unless `optional` is true in which case return `skipped: true`.
 
 This module is pure (no side effects) and fully unit-testable.
@@ -241,7 +241,7 @@ class ChildProcessError extends Error { ... }
 ```
 npm run test
   ↓
-bin/run-script-os-arch.js  (parse flags)
+bin/target-run.js  (parse flags)
   ↓
 src/index.js
   ├─ read package.json (find scripts map)
@@ -273,7 +273,7 @@ src/index.js
 ### 5.2 Phase 1 — Scaffolding
 
 - Initialize package with `npm init`, set `"type": "module"` (ESM) or `commonjs` based on target Node versions.
-- Set up `bin` field in `package.json` pointing to `bin/run-script-os-arch.js`.
+- Set up `bin` field in `package.json` pointing to `bin/target-run.js`.
 - Implement `--help` output listing all flags and the naming convention.
 - Implement `--version` reading from `package.json`.
 - Implement `--dry-run` flag that prints the resolved script name without running it.
@@ -291,7 +291,7 @@ src/index.js
 
 - Detect package manager from `npm_execpath`. Extract the executable name (`npm`, `yarn`, `pnpm`, `bun`).
 - Spawn with `{ stdio: 'inherit' }` to fully pass through stdout/stderr/stdin including color codes.
-- Propagate exit code from the child process as the exit code of `run-script-os-arch` itself.
+- Propagate exit code from the child process as the exit code of `target-run` itself.
 - Forward `SIGINT` and `SIGTERM` to the child process to allow clean interrupt handling.
 - Do not use `shell: true` — this avoids shell injection risk and improves Windows compatibility.
 
@@ -304,7 +304,7 @@ src/index.js
 When no script matches any fallback level, the tool prints a clear diagnostic and exits with code 1:
 
 ```
-[run-script-os-arch] ERROR: No matching script found.
+[target-run] ERROR: No matching script found.
   Calling script : test
   Platform       : linux
   Architecture   : arm64
@@ -314,7 +314,7 @@ When no script matches any fallback level, the tool prints a clear diagnostic an
 
 ### 6.2 Called Outside npm Scripts
 
-If `process.env.npm_lifecycle_event` is undefined (e.g. run directly as `node run-script-os-arch.js`), the tool either exits with a descriptive error or, if `--script <n>` is passed explicitly, uses that value.
+If `process.env.npm_lifecycle_event` is undefined (e.g. run directly as `node target-run.js`), the tool either exits with a descriptive error or, if `--script <n>` is passed explicitly, uses that value.
 
 ### 6.3 Missing or Malformed package.json
 
@@ -329,12 +329,12 @@ If the `scripts` field does not exist or is empty, emit a warning and exit clean
 
 ### 6.5 Circular or Self-Referencing Scripts (Lifecycle Hooks)
 
-If the base script's own value is `run-script-os-arch` and no platform variant is found, this is the expected pattern for optional lifecycle hooks. The tool exits with code 0 silently (level 5 in the fallback chain) rather than erroring. This distinguishes between two cases:
+If the base script's own value is `target-run` and no platform variant is found, this is the expected pattern for optional lifecycle hooks. The tool exits with code 0 silently (level 5 in the fallback chain) rather than erroring. This distinguishes between two cases:
 
 - **`pretest` with no variant** → intended no-op, exit 0.
 - **`test` with no variant** → likely a misconfiguration, exit 1 (or exit 0 with `--optional`).
 
-A true infinite-loop cycle (e.g. a platform variant whose command is also `run-script-os-arch`) is detected by checking the resolved command value before spawning, and aborts with a `CircularDispatchError`.
+A true infinite-loop cycle (e.g. a platform variant whose command is also `target-run`) is detected by checking the resolved command value before spawning, and aborts with a `CircularDispatchError`.
 
 ### 6.6 Windows Path Handling
 
@@ -411,10 +411,10 @@ strategy:
 
 ```json
 {
-  "name": "run-script-os-arch",
+  "name": "target-run",
   "version": "1.0.0",
   "description": "OS & architecture-aware npm script dispatcher",
-  "bin": { "run-script-os-arch": "bin/run-script-os-arch.js" },
+  "bin": { "target-run": "bin/target-run.js" },
   "engines": { "node": ">=16.0.0" },
   "files": ["bin/", "src/"],
   "keywords": ["npm-script", "cross-platform", "os", "arch", "runner"],
@@ -475,7 +475,7 @@ The package has zero production dependencies by design. All functionality relies
 
 ### 12.1 Open Questions
 
-- Should the tool support a `.run-script-os-arch.json` config file for more complex routing rules (e.g. libc variant `glibc` vs `musl` for Linux)?
+- Should the tool support a `.target-run.json` config file for more complex routing rules (e.g. libc variant `glibc` vs `musl` for Linux)?
 - Should the fallback chain be configurable (e.g. disable arch-only fallback for strict environments)?
 - Should the tool print a warning (rather than error) when falling back from an exact match, to surface potential misconfiguration?
 
@@ -517,7 +517,7 @@ The package has zero production dependencies by design. All functionality relies
 
 ### C. Similar Packages & Differentiation
 
-| Package | Key Difference vs `run-script-os-arch` |
+| Package | Key Difference vs `target-run` |
 |---------|----------------------------------------|
 | `run-script-os` | No architecture support — only dispatches on OS |
 | `cross-env` | Sets environment variable syntax, does NOT dispatch scripts |
