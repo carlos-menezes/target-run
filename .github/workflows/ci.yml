@@ -59,6 +59,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      HUSKY: '0'
     steps:
       - uses: actions/checkout@v4
 

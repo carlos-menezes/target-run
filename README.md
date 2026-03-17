@@ -38,23 +38,18 @@ Given this `package.json` on a Linux x64 machine:
 {
   "scripts": {
     "build": "target-run",
-    "build:linux:x64": "gcc -O2 -o out main.c",
-    "build:darwin": "clang -o out main.c",
-    "build:default": "cc -o out main.c"
+    "build:linux:x64": "node dist/index-linux-x64.js",
+    "build:darwin:arm64": "node dist/index-darwin-arm64.js",
+    "build:default": "node dist/index.js"
   }
 }
 ```
 
 ```sh
 $ pnpm build
-# Runs: gcc -O2 -o out main.c
-
-$ pnpm build --dry-run
-# Prints: build:linux:x64
-
-$ pnpm build --verbose
-# platform: linux  arch: x64  key: build:linux:x64  runner: pnpm
-# Runs: gcc -O2 -o out main.c
+# linux/x64   → node dist/index-linux-x64.js
+# darwin/arm64 → node dist/index-darwin-arm64.js
+# win32/x64   → node dist/index.js  (fallback)
 ```
 
 ## CLI options
