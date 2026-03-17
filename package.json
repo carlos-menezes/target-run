@@ -46,7 +46,8 @@
 		"version": "changeset version",
 		"release": "pnpm build && pnpm publish --access public",
 		"prepublishOnly": "pnpm test",
-		"prepare": "husky"
+		"prepare": "husky",
+		"knip": "knip"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.7",
@@ -55,7 +56,7 @@
 		"@commitlint/config-conventional": "^20.5.0",
 		"@types/node": "^22.0.0",
 		"husky": "^9.1.7",
-		"tsx": "^4.19.3",
+		"knip": "^5.87.0",
 		"typescript": "^5.9.3",
 		"vitest": "^3.1.1"
 	}

@@ -5,7 +5,7 @@ import { CircularDispatchError } from "./errors.js";
  * Infers the package manager by inspecting npm_execpath, which all major
  * package managers (npm, pnpm, yarn, bun) set automatically when running scripts.
  */
-export const detectPackageManager = (): string => {
+const detectPackageManager = (): string => {
 	const execPath = process.env["npm_execpath"];
 	if (!execPath) return "npm";
 	const normalized = execPath.toLowerCase().replace(/\\/g, "/");
@@ -15,7 +15,7 @@ export const detectPackageManager = (): string => {
 	return "npm";
 };
 
-export type RunnerOptions = {
+type RunnerOptions = {
 	scriptKey: string;
 	command: string;
 	dryRun?: boolean;
