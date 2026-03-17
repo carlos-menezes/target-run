@@ -60,5 +60,7 @@ $ pnpm build
 | `--verbose` | Print platform, arch, resolved key and runner |
 | `--optional` | Exit 0 silently when no match is found |
 | `--required` | Exit 1 when no match is found |
-| `--script <name>` | Override the base script name |
+| `--script <name>` | Override the base script name[^1] |
 | `--cwd <path>` | Set the working directory for `package.json` lookup |
+
+[^1]: Useful when invoking `target-run` outside of an npm lifecycle, e.g. `target-run --script build` in a shell script or CI step where `npm_lifecycle_event` is not set.
