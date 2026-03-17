@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
-	console.log(`target-run — OS & architecture-aware script dispatcher
+	console.log(`target-run — Platform-aware script runner for Node.js projects.
 
 Usage: target-run [options]
 

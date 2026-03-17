@@ -2,7 +2,7 @@
 
 ![NPM Version](https://img.shields.io/npm/v/target-run) ![NPM Downloads](https://img.shields.io/npm/dt/target-run) ![NPM License](https://img.shields.io/npm/l/target-run)
 
-OS & architecture-aware script dispatcher for `package.json`.
+Platform-aware script runner for Node.js projects.
 
 ```sh
 pnpm add -D target-run
