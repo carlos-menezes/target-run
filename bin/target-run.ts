@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 
 if (args.includes("--help") || args.includes("-h")) {
-	console.log(`target-run — Platform-aware script runner for Node.js projects.
+	console.log(`target-run: platform-aware script runner for Node.js projects.
 
 Usage: target-run [options]
 
@@ -18,10 +18,10 @@ Options:
   --dry-run         Resolve and print the target script key without executing
   --verbose         Print platform, arch, resolved key and runner details
   --optional        Exit 0 silently when no matching script is found instead of
-                    erroring — useful for hooks that only apply to some platforms
+                    erroring; useful for hooks that only apply to some platforms
   --required        Exit 1 when no matching script is found, even for lifecycle hooks
                     (e.g. preinstall) whose missing variant would normally be skipped
-                    silently — use this to enforce that every platform has a variant
+                    silently; use this to enforce that every platform has a variant
   --script <name>   Override the base script name (bypasses npm_lifecycle_event)
   --cwd <path>      Set the working directory for package.json lookup
 

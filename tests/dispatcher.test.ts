@@ -26,7 +26,7 @@ afterEach(() => {
 	delete process.env["npm_lifecycle_event"];
 });
 
-describe("dispatch — level 5 (lifecycle hook self-reference)", () => {
+describe("dispatch : level 5 (lifecycle hook self-reference)", () => {
 	beforeEach(() => {
 		mockReadFileSync.mockReturnValue(
 			JSON.stringify({ scripts: { build: "target-run" } }),
@@ -54,7 +54,7 @@ describe("dispatch — level 5 (lifecycle hook self-reference)", () => {
 	});
 });
 
-describe("dispatch — level 6 (no match at all)", () => {
+describe("dispatch : level 6 (no match at all)", () => {
 	beforeEach(() => {
 		mockReadFileSync.mockReturnValue(
 			JSON.stringify({ scripts: { build: "some-other-tool" } }),

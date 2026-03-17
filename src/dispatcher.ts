@@ -32,7 +32,7 @@ export type DispatcherOptions = {
 	 * Useful when invoking the dispatcher programmatically or from --script flag.
 	 */
 	baseScript?: string;
-	/** Injectable OS detector — supply a stub in unit tests. */
+	/** Injectable OS detector. */
 	detector?: Detector;
 };
 
@@ -104,7 +104,7 @@ export const dispatch = (options: DispatcherOptions = {}): void => {
 		const result = resolveScript({ base: baseScript, platform, arch, scripts });
 
 		if (result.key === null) {
-			// Level 5 — lifecycle hook self-reference, no platform variant found.
+			// Level 5: lifecycle hook self-reference, no platform variant found.
 			if (result.skipped && !options.required) {
 				if (options.verbose) {
 					console.error(
@@ -114,7 +114,7 @@ export const dispatch = (options: DispatcherOptions = {}): void => {
 				process.exit(0);
 			}
 
-			// Level 6 — genuinely no match (or --required forces hard failure on level 5).
+			// Level 6: genuinely no match (or --required forces hard failure on level 5).
 			if (options.optional) {
 				if (options.verbose) {
 					console.error(
@@ -152,13 +152,11 @@ export const dispatch = (options: DispatcherOptions = {}): void => {
 	} catch (err) {
 		if (err instanceof ScriptNotFoundError) {
 			console.error("[target-run] ERROR: No matching script found.");
-			console.error(`  Calling script : ${err.baseScript}`);
-			console.error(`  Platform       : ${err.platform}`);
-			console.error(`  Architecture   : ${err.arch}`);
-			console.error(`  Tried keys     : ${err.tried.join(", ")}`);
-			console.error(
-				`  Available      : ${err.available.join(", ") || "(none)"}`,
-			);
+			console.error(`  Script\t: ${err.baseScript}`);
+			console.error(`  Platform\t: ${err.platform}`);
+			console.error(`  Architecture\t: ${err.arch}`);
+			console.error(`  Tried keys\t: ${err.tried.join(", ")}`);
+			console.error(`  Available\t: ${err.available.join(", ") || "(none)"}`);
 		} else if (err instanceof Error) {
 			console.error(`[target-run] ERROR: ${err.message}`);
 		}

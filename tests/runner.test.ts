@@ -19,7 +19,7 @@ afterEach(() => {
 	vi.clearAllMocks();
 });
 
-describe("run — circular dispatch guard", () => {
+describe("run : circular dispatch guard", () => {
 	it("throws CircularDispatchError when command is exactly 'target-run'", () => {
 		expect(() =>
 			run({ scriptKey: "build", command: "target-run" }),
@@ -42,7 +42,7 @@ describe("run — circular dispatch guard", () => {
 	});
 });
 
-describe("run — dry-run mode", () => {
+describe("run : dry-run mode", () => {
 	it("returns 0 without spawning", () => {
 		const code = run({ scriptKey: "test", command: "vitest", dryRun: true });
 		expect(code).toBe(0);
@@ -57,7 +57,7 @@ describe("run — dry-run mode", () => {
 	});
 });
 
-describe("run — verbose mode", () => {
+describe("run : verbose mode", () => {
 	it("logs package manager and script key to stderr", () => {
 		mockSpawnSync.mockReturnValue({ status: 0, error: undefined } as ReturnType<
 			typeof spawnSync
@@ -69,7 +69,7 @@ describe("run — verbose mode", () => {
 	});
 });
 
-describe("run — spawn behaviour", () => {
+describe("run : spawn behaviour", () => {
 	it("passes the script key to the package manager, not the raw command", () => {
 		mockSpawnSync.mockReturnValue({ status: 0, error: undefined } as ReturnType<
 			typeof spawnSync

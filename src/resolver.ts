@@ -5,7 +5,8 @@ export type ResolveScriptParams = {
 	scripts: Record<string, string>;
 };
 
-/** A script was found — key and command are both guaranteed non-null. */
+/** A script was found.
+ * Key and command are both guaranteed non-null. */
 type ResolveScriptFound = {
 	key: string;
 	command: string;
@@ -13,13 +14,14 @@ type ResolveScriptFound = {
 	skipped?: never;
 };
 
-/** No script matched — key/command are null; skipped signals a silent skip. */
+/** No script matched.
+ * Key/command are null; skipped signals a silent skip. */
 type ResolveScriptMissed = {
 	key: null;
 	command: null;
 	tried: string[];
 	/** True when the base script is `target-run` itself and no platform variant
-	 *  was found — the canonical signal for a silent lifecycle-hook skip. */
+	 *  was found; the canonical signal for a silent lifecycle-hook skip. */
 	skipped?: boolean;
 };
 
@@ -28,11 +30,11 @@ export type ResolveScriptResult = ResolveScriptFound | ResolveScriptMissed;
 /**
  * Resolves the correct script key using the fallback chain:
  *
- * 1. `<base>:<platform>:<arch>` — exact match
- * 2. `<base>:<platform>`        — OS-only match
- * 3. `<base>:<arch>`            — arch-only match
- * 4. `<base>:default`           — explicit default
- * 5. Self-reference skip        — if base script value is "target-run", skipped=true
+ * 1. `<base>:<platform>:<arch>` : exact match
+ * 2. `<base>:<platform>`        : OS-only match
+ * 3. `<base>:<arch>`            : arch-only match
+ * 4. `<base>:default`           : explicit default
+ * 5. Self-reference skip        : if base script value is "target-run", skipped=true
  *
  * Returns `{ key: null, command: null, tried }` (with optional `skipped`)
  * when nothing matches.
