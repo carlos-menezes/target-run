@@ -45,6 +45,9 @@ jobs:
       - name: Lint & format (biome check)
         run: pnpm check
 
+      - name: Knip
+        run: pnpm knip
+
       - name: Type-check & build
         run: pnpm build
 
