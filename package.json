@@ -2,6 +2,20 @@
 	"name": "target-run",
 	"version": "0.0.0",
 	"description": "OS & architecture-aware script dispatcher",
+	"keywords": [
+		"cross-platform",
+		"script",
+		"dispatcher",
+		"platform",
+		"architecture",
+		"cli",
+		"npm-scripts",
+		"os"
+	],
+	"repository": {
+		"url": "https://github.com/carlos-menezes/target-run",
+		"type": "git"
+	},
 	"type": "module",
 	"author": "Carlos Menezes",
 	"license": "MIT",
